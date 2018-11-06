@@ -1,16 +1,19 @@
+@file:Suppress("DEPRECATION")
+
 package com.uni7corn.utheme.widget
 
 import android.content.Context
+import android.graphics.drawable.StateListDrawable
 import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
-import com.uni7corn.utheme.R
 import com.uni7corn.utheme.callback.ITheme
+import com.uni7corn.utheme.callback.IVisible
+import com.uni7corn.utheme.util.AttrTextUtils
 import com.uni7corn.utheme.util.ViewAttributeUtil
 
-@Suppress("DEPRECATION")
-class UTextView : AppCompatTextView, ITheme {
+class UTextView : AppCompatTextView, ITheme, IVisible {
 
     companion object {
 
@@ -20,15 +23,16 @@ class UTextView : AppCompatTextView, ITheme {
 
     private var attrBgDrawable: String? = null
     private var attrTextColor: String? = null
+    private var attrTextHintColor: String? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         attrBgDrawable = ViewAttributeUtil.getResourceName(attrs, android.R.attr.background)
         attrTextColor = ViewAttributeUtil.getResourceName(attrs, android.R.attr.textColor)
-
-        resources.getIdentifier(attrTextColor, "color", "schemas.android.com")
-        Log.e(TAG, "---------->: attrBgDrawable=$attrBgDrawable    attrTextColor=$attrTextColor")
+        attrTextHintColor = ViewAttributeUtil.getResourceName(attrs, android.R.attr.textColorHint)
+        //resources.getIdentifier(attrTextColor, "color", "schema.android.com")
+        Log.e(TAG, "---------->: attrBgDrawable=    attrTextColor=$attrTextColor")
     }
 
     override fun getView(): View {
@@ -36,17 +40,37 @@ class UTextView : AppCompatTextView, ITheme {
     }
 
     override fun updateTheme(themeSuffix: String) {
-        attrTextColor = if (attrTextColor?.contains("day")!!) {
-            attrTextColor?.replace("day", themeSuffix)
-        } else {
-            attrTextColor?.replace("themeSuffix", "day")
+        attrTextColor?.let {
+            val identifierColor = resources.getIdentifier(AttrTextUtils.splitText(it, themeSuffix), "color", context.packageName)
+            if (identifierColor <= 0x0) return
+            val colorStateList = resources.getColorStateList(identifierColor)
+            // val colorStateList = ColorStateList.valueOf(color)
+            setTextColor(colorStateList)
         }
 
-        val identifierColor = resources.getIdentifier(attrTextColor, "color", context.packageName)
+        attrTextHintColor?.let {
+            val identifierColor = resources.getIdentifier(AttrTextUtils.splitText(it, themeSuffix), "color", context.packageName)
+            if (identifierColor <= 0x0) return
+            val colorStateList = resources.getColorStateList(identifierColor)
+            //val colorStateList = ColorStateList.valueOf(color)
+            setHintTextColor(colorStateList)
+        }
+        attrBgDrawable?.let {
+            val identifierColor = resources.getIdentifier(AttrTextUtils.splitText(it, themeSuffix), "drawable", context.packageName)
+            if (identifierColor <= 0x0) return
+            val d = resources.getDrawable(identifierColor)
+            val sld: StateListDrawable = StateListDrawable().apply {
+                addState(drawableState, d)
+            }
+            setBackgroundDrawable(sld)
+        }
+    }
 
-        R.color.b1_color_night
+    override fun hide() {
+        visibility = View.GONE
+    }
 
-        val color = resources.getColor(identifierColor)
-        setTextColor(color)
+    override fun show() {
+        visibility = View.VISIBLE
     }
 }

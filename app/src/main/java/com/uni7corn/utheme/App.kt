@@ -8,19 +8,17 @@ class App : Application() {
 
     companion object {
 
-        private lateinit var mContext: Context
-
+        private lateinit var mContext: Application
 
         @JvmStatic
         fun getAppContext(): Application {
-            return mContext as Application
+            return mContext
         }
 
     }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-
     }
 
     override fun onCreate() {
