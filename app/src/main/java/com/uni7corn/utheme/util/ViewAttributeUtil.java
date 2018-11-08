@@ -19,8 +19,8 @@ public class ViewAttributeUtil {
         for (int i = 0; i < count; i++) {
             if (attr.getAttributeNameResource(i) == paramInt) {
                 String str = attr.getAttributeValue(i);
-                if (null != str && str.startsWith("?")) {
-                    value = Integer.valueOf(str.substring(1, str.length()));
+                if (null != str && str.startsWith("@")) {
+                    value = Integer.valueOf(str.substring(1, str.indexOf("/")));
                     return value;
                 }
             }

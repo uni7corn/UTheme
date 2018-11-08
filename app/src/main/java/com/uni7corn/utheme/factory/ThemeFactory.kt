@@ -29,25 +29,25 @@ class ThemeFactory : LayoutInflater.Factory2 {
         Log.e(TAG, "onCreateView: -----2--->name=$name")
         when (name) {
             "TextView" -> {
+                var styleAttribute = 0
+
                 for (index in 0 until attrs?.attributeCount!!) {
                     val attributeName = attrs.getAttributeName(index)
                     val attributeValue = attrs.getAttributeValue(index)
                     val nameResource = attrs.getAttributeResourceValue(index, 0)
+                    styleAttribute = attrs.styleAttribute
 
                     //val resourceName = context.resources.getResourceName(nameResource)
-                    Log.e(
-                            TAG,
-                            "--------->: attributeName=$attributeName  attributeValue=$attributeValue  nameResource=$nameResource"
-                    )
+                    Log.e(TAG, "--------->: attributeName=$attributeName  attributeValue=$attributeValue  nameResource=$nameResource   styleAttribute=$styleAttribute")
                     //Log.e(TAG, "--------->: resourceName=$resourceName")
 
                     //val attrResName = resourceName.split("/")[1]
 
                     //Log.e(TAG, "onCreateView: --------------->attrResName=$attrResName")
-                    break
+                    // break
                 }
 
-                return UTextView(context, attrs, 0)
+                return UTextView(context, attrs, styleAttribute)
             }
         }
         return null

@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import com.uni7corn.utheme.R
 import com.uni7corn.utheme.callback.ITheme
 import com.uni7corn.utheme.callback.IVisible
 import com.uni7corn.utheme.util.AttrTextUtils
@@ -32,7 +33,9 @@ class UTextView : AppCompatTextView, ITheme, IVisible {
         attrTextColor = ViewAttributeUtil.getResourceName(attrs, android.R.attr.textColor)
         attrTextHintColor = ViewAttributeUtil.getResourceName(attrs, android.R.attr.textColorHint)
         //resources.getIdentifier(attrTextColor, "color", "schema.android.com")
-        Log.e(TAG, "---------->: attrBgDrawable=    attrTextColor=$attrTextColor")
+       // val styleAttribute = attrs.styleAttribute
+        context.obtainStyledAttributes(attrs,android.R.attr.style,0,0)
+        Log.e(TAG, "---------->: attrBgDrawable=$attrBgDrawable   attrTextColor=$attrTextColor")
     }
 
     override fun getView(): View {
