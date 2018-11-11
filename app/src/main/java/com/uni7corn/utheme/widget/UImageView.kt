@@ -1,9 +1,7 @@
-@file:Suppress("DEPRECATION")
-
 package com.uni7corn.utheme.widget
 
 import android.content.Context
-import android.support.v7.widget.AppCompatTextView
+import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -12,25 +10,24 @@ import com.uni7corn.utheme.callback.IVisible
 import com.uni7corn.utheme.delegate.ThemeDelegate
 import com.uni7corn.utheme.util.ViewAttributeUtil
 
-class UTextView : AppCompatTextView, ITheme, IVisible {
+class UImageView : AppCompatImageView, ITheme, IVisible {
 
     companion object {
-
-        private val TAG: String = UTextView::class.java.simpleName
-
+        private val TAG = UImageView::class.java.simpleName
     }
 
-    private var attrBgDrawable: String? = null
-    private var attrTextColor: String? = null
-    private var attrTextHintColor: String? = null
+    private var attrBgDrawable: String?
+    private var attrSrcDrawable: String?
+
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+
+        attrSrcDrawable = ViewAttributeUtil.getResourceName(attrs, android.R.attr.src)
         attrBgDrawable = ViewAttributeUtil.getResourceName(attrs, android.R.attr.background)
-        attrTextColor = ViewAttributeUtil.getResourceName(attrs, android.R.attr.textColor)
-        attrTextHintColor = ViewAttributeUtil.getResourceName(attrs, android.R.attr.textColorHint)
-        Log.e(TAG, "---------->: attrBgDrawable=$attrBgDrawable   attrTextColor=$attrTextColor")
+
+        Log.e(TAG, "attrSrcDrawable=$attrSrcDrawable")
     }
 
     override fun getView(): View {
@@ -38,9 +35,8 @@ class UTextView : AppCompatTextView, ITheme, IVisible {
     }
 
     override fun updateTheme(themeSuffix: String) {
-        ThemeDelegate.updateTextTheme(attrTextColor, this, themeSuffix)
-        ThemeDelegate.updateTextHintTheme(attrTextHintColor, this, themeSuffix)
-        ThemeDelegate.updateBackgroundTheme(attrBgDrawable, this, themeSuffix)
+        ThemeDelegate.updateSrcTheme(attrSrcDrawable, this, themeSuffix)
+        ThemeDelegate.updateBackgroundTheme(attrSrcDrawable, this, themeSuffix)
     }
 
     override fun hide() {
@@ -50,4 +46,5 @@ class UTextView : AppCompatTextView, ITheme, IVisible {
     override fun show() {
         visibility = View.VISIBLE
     }
+
 }
